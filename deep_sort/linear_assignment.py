@@ -1,12 +1,10 @@
 # vim: expandtab:ts=4:sw=4
 from __future__ import absolute_import
 import numpy as np
-from sklearn.utils.linear_assignment_ import linear_assignment
+from scipy.optimize import linear_sum_assignment
 from . import kalman_filter
 
-
 INFTY_COST = 1e+5
-
 
 def min_cost_matching(
         distance_metric, max_distance, tracks, detections, track_indices=None,
@@ -188,3 +186,7 @@ def gate_cost_matrix(
             track.mean, track.covariance, measurements, only_position)
         cost_matrix[row, gating_distance > gating_threshold] = gated_cost
     return cost_matrix
+
+def linear_assignment(cost_matrix):
+    x, y = linear_sum_assignment(cost_matrix)
+    return np.array(list(zip(x, y)))
